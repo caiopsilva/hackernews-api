@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 const APP_SECRET = 'GraphQL-is-aw3some'
 
-function getUserId(context) {
+function getUserId (context) {
   const Authorization = context.request.get('Authorization')
   if (Authorization) {
     const token = Authorization.replace('Bearer ', '')
@@ -14,5 +14,5 @@ function getUserId(context) {
 
 module.exports = {
   APP_SECRET,
-  getUserId,
+  getUserId
 }

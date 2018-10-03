@@ -2,20 +2,26 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { APP_SECRET, getUserId } = require('../utils')
 
-async function signup(parent, args, context, info) {
+async function signup (parent, args, context, info) {
   const password = await bcrypt.hash(args.password, 10)
-  const user = await context.db.mutation.createUser({
-    data: { ...args, password },
-  }, `{ id }`)
+  const user = await context.db.mutation.createUser(
+    {
+      data: { ...args, password }
+    },
+    `{ id }`
+  )
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
   return {
     token,
-    user,
+    user
   }
 }
 
-async function login(parent, args, context, info) {
-  const user = await context.db.query.user({ where: { email: args.email } }, ` { id password } `)
+async function login (parent, args, context, info) {
+  const user = await context.db.query.user(
+    { where: { email: args.email } },
+    ` { id password } `
+  )
   if (!user) {
     throw new Error('No such user found')
   }
@@ -29,29 +35,29 @@ async function login(parent, args, context, info) {
 
   return {
     token,
-    user,
+    user
   }
 }
 
-function post(parent, args, context, info) {
+function post (parent, args, context, info) {
   const userId = getUserId(context)
   return context.db.mutation.createLink(
     {
       data: {
         url: args.url,
         description: args.description,
-        postedBy: { connect: { id: userId } },
-      },
+        postedBy: { connect: { id: userId } }
+      }
     },
-    info,
+    info
   )
 }
 
-async function vote(parent, args, context, info) {
+async function vote (parent, args, context, info) {
   const userId = getUserId(context)
   const linkExists = await context.db.exists.Vote({
     user: { id: userId },
-    link: { id: args.linkId },
+    link: { id: args.linkId }
   })
   if (linkExists) {
     throw new Error(`Already voted for link: ${args.linkId}`)
@@ -60,16 +66,16 @@ async function vote(parent, args, context, info) {
     {
       data: {
         user: { connect: { id: userId } },
-        link: { connect: { id: args.linkId } },
-      },
+        link: { connect: { id: args.linkId } }
+      }
     },
-    info,
+    info
   )
 }
 
 module.exports = {
-    signup,
-    login,
-    post,
-    vote
+  signup,
+  login,
+  post,
+  vote
 }
