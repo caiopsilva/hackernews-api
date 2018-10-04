@@ -1,9 +1,10 @@
-# import Link from "./generated/prisma.graphql"
-# import Link, LinkSubscriptionPayload, Vote, VoteSubscriptionPayload, LinkOrderByInput from "./generated/prisma.graphql"
+# import * as prisma from "./generated/prisma.graphql" 
 
 type Query {
   info: String!
   feed(filter: String, skip: Int, first: Int, orderBy: LinkOrderByInput): Feed!
+  link(where: LinkWhereUniqueInput!): Link!
+  users(filter: UserWhereInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
 }
 
 type Feed {

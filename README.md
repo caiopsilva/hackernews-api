@@ -8,4 +8,4 @@ run `docker-compose up -d` inside `database/hackernews` to start docker prisma c
 
 ## Server
 
-Run `node src/index.js` to run server and `graphql playground` to open graphql playground UI
+Run `yarn start` to run server and `graphql playground` to open graphql playground UI
